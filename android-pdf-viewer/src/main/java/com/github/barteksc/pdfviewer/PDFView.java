@@ -39,6 +39,7 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.listener.OnPageScrollListener;
 import com.github.barteksc.pdfviewer.listener.OnRenderListener;
+import com.github.barteksc.pdfviewer.listener.OnZoomChangeListener;
 import com.github.barteksc.pdfviewer.model.PagePart;
 import com.github.barteksc.pdfviewer.scroll.ScrollHandle;
 import com.github.barteksc.pdfviewer.source.AssetSource;
@@ -300,6 +301,11 @@ public class PDFView extends RelativeLayout {
      * pages numbers used when calling onDrawAllListener
      */
     private List<Integer> onDrawPagesNums = new ArrayList<>(10);
+
+    /**
+     * callback used when calling onZoomChanged
+     */
+    private OnZoomChangeListener zoomListener;
 
     /**
      * Construct the initial view
@@ -1058,7 +1064,16 @@ public class PDFView extends RelativeLayout {
      */
     public void zoomTo(float zoom) {
         this.zoom = zoom;
+        if (this.zoomListener != null) {
+            this.zoomListener.onZoomChanged(zoom);
+        }
     }
+
+    public void onZoomChanged(OnZoomChangeListener callBack)
+    {
+        this.zoomListener = callBack;
+    }
+
 
     /**
      * Change the zoom level, relatively to a pivot point.
